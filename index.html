@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            padding: 0;
+            margin: 0;
+        }
+
+        section {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .container {
+            width: 95%;
+            margin: 0 auto;
+            max-width: 1400px;
+        }
+
+        .writing-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .text-editor {
+            background-image: url("img/text-editor.jpg");
+            max-width: 650px;
+            width: 80%;
+            aspect-ratio: 450 / 327;
+            background-size: 100% 100%;
+            padding-top: 30px;
+            padding-left: 10px;
+            filter: drop-shadow(1px 1px 10px rgba(0, 0, 0, 0.1));
+        }
+
+        .text-editor textarea {
+            height: 300px;
+            width: 635px;
+            height: calc(100% - 27px);
+            width: calc(100% - 15px);
+            border: none;
+            resize: none;
+        }
+
+        .text-editor textarea:focus {
+            outline: none;
+        }
+
+        @media only screen and (max-width:768px) {
+            .text-editor {
+                width: 300px;
+                height: 218px;
+                aspect-ratio: unset;
+                filter: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section>
+
+        <div class="container writing-container">
+
+            <div class="text-editor">
+
+                <textarea name="" id="" cols="30" rows="10" placeholder="">
+[SD2####Product]	[Argent Omega####]
+[SD2####Product]	[Argent Cloud Scheduler####]	
+[SD2####Product]	[Argent Job Scheduler####]			
+[SD2####Product]	[Argent Queue Engine####]			
+[SD2####Product]	[Argent Global Manager####]		
+[SD2####Product]	[Argent WorldView####]			
+[SD2####Product]	[Other####]				
+                    
+                    
+                    
+                    
+[SD2####Status]	[Approved####]				
+[SD2####Status]	[Argent Checking####]			
+[SD2####Status]	[Customer Checking####]			
+[SD2####Status]	[Escalated To Enhancement####]		
+[SD2####Status]	[Escalated To Issue####]			
+[SD2####Status]	[Outstanding####]				
+[SD2####Status]	[Resolved By Customer####]			
+[SD2####Status]	[Resolved By Argent####]			
+[SD2####Status]	[Resolved -- Other####]			
+[SD2####Status]	[Other -- Specify####]			
+                    </textarea>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <script>
+        let zIndexCounter = 1000;
+
+        function makeElementDraggable(element) {
+            let posX = 0, posY = 0, initialX = 0, initialY = 0;
+            let isDragging = false;
+            let translateX = 0, translateY = 0;
+
+            element.onmousedown = dragMouseDown;
+            element.ontouchstart = dragMouseDown;
+
+            function dragMouseDown(e) {
+                if (e.target.tagName.toLowerCase() === 'textarea') {
+                    return;
+                }
+
+                if (e.type === "touchstart" && e.touches.length > 1) {
+                    return;
+                }
+
+                e.preventDefault();
+
+                if (e.type === "touchstart") {
+                    initialX = e.touches[0].clientX;
+                    initialY = e.touches[0].clientY;
+                } else {
+                    initialX = e.clientX;
+                    initialY = e.clientY;
+                }
+
+                isDragging = false;
+
+                element.style.zIndex = ++zIndexCounter;
+
+                element.style.transform = `translate(${translateX}px, ${translateY}px)`;
+
+                document.onmousemove = elementDrag;
+                document.ontouchmove = elementDrag;
+
+                document.onmouseup = stopDragging;
+                document.ontouchend = stopDragging;
+            }
+
+            function elementDrag(e) {
+                e.preventDefault();
+
+                if (e.type === "touchmove") {
+                    if (e.touches.length > 1) {
+                        return;
+                    }
+                    posX = initialX - e.touches[0].clientX;
+                    posY = initialY - e.touches[0].clientY;
+                    initialX = e.touches[0].clientX;
+                    initialY = e.touches[0].clientY;
+                } else {
+                    posX = initialX - e.clientX;
+                    posY = initialY - e.clientY;
+                    initialX = e.clientX;
+                    initialY = e.clientY;
+                }
+
+                translateX -= posX;
+                translateY -= posY;
+                element.style.transform = `translate(${translateX}px, ${translateY}px)`;
+
+                isDragging = true;
+            }
+
+            function stopDragging(e) {
+                document.onmousemove = null;
+                document.ontouchmove = null;
+
+                document.onmouseup = null;
+                document.ontouchend = null;
+
+                if (isDragging) {
+                    e.preventDefault();
+                }
+            }
+
+            element.onclick = function (e) {
+                if (isDragging) {
+                    e.preventDefault();
+                }
+            };
+        }
+
+        makeElementDraggable(document.querySelector(".text-editor"));
+    </script>
+
+</body>
+
+</html>
